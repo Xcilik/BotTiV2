@@ -523,33 +523,52 @@ module.exports = naze = async (naze, m, msg, store) => {
 		for (let gameName in games) {
 			let game = games[gameName];
 			let id = iGame(game, m.chat);
-			if ((!isCmd || isCreator) && m.quoted && id == m.quoted.id) {
-				if (game[m.chat + id]?.jawaban) {
-					if (gameName == 'kuismath') {
-						jawaban = game[m.chat + id].jawaban
-						const difficultyMap = { 'noob': 1, 'easy': 1.5, 'medium': 2.5, 'hard': 4, 'extreme': 5, 'impossible': 6, 'impossible2': 7 };
-						let randMoney = difficultyMap[kuismath[m.chat + id].mode]
-						if (!isNaN(budy)) {
-							if (budy.toLowerCase() == jawaban) {
-								db.users[m.sender].money += randMoney * 1000
-								await m.reply(`Jawaban Benar 🎉\nBonus Money 💰 *+${randMoney * 1000}*`)
-								delete kuismath[m.chat + id]
-							} else m.reply('*Jawaban Salah!*')
-						}
-					} else {
-						jawaban = game[m.chat + id].jawaban
-						let jawabBenar = /tekateki|tebaklirik|tebaklagu|tebakkata|tebaknegara|tebakbendera/.test(gameName) ? (similarity(budy.toLowerCase(), jawaban) >= almost) : (budy.toLowerCase() == jawaban)
-						let bonus = gameName == 'caklontong' ? 9999 : gameName == 'tebaklirik' ? 4299 : gameName == 'susunkata' ? 2989 : 3499
-						if (jawabBenar) {
-							db.users[m.sender].money += bonus * 1
-							await m.reply(`Jawaban Benar 🎉\nBonus Money 💰 *+${bonus}*`)
-							delete game[m.chat + id]
-						} else m.reply('*Jawaban Salah!*')
+			if (m.quoted && id == m.quoted.id) {
+				if (gameName == 'kuismath') {
+					jawaban = game[m.chat + id].jawaban;
+					const difficultyMap = {
+						'noob': 1, 'easy': 1.5, 'medium': 2.5,
+						'hard': 4, 'extreme': 5, 'impossible': 6, 'impossible2': 7
+					};
+					let randMoney = difficultyMap[kuismath[m.chat + id].mode];
+					if (!isNaN(budy)) {
+						if (budy.toLowerCase() == jawaban) {
+							db.users[m.sender].uang += randMoney * 1000;
+							await farid.sendButtonMsg(m.chat, {
+								caption: `Jawaban Benar 🎉\nBonus Uang 💰 *+${bonus}*`,
+								footer: `Game: ${gameName}`,
+								buttons: [
+									{ buttonId: `.${gameName}`, buttonText: { displayText: 'Next' }, type: 1 }
+								]
+							}, { quoted: m });
+							
+							delete kuismath[m.chat + id];
+						} else m.reply('*Jawaban Salah!*');
 					}
+				} else {
+					jawaban = game[m.chat + id].jawaban;
+					let jawabBenar = /tekateki|tebaklirik|tebaklagu|tebakkata|tebaknegara|tebakbendera/.test(gameName)
+						? (similarity(budy.toLowerCase(), jawaban) >= almost)
+						: (budy.toLowerCase() == jawaban);
+		
+					let bonus = gameName == 'caklontong' ? 9999 :
+								gameName == 'tebaklirik' ? 4299 :
+								gameName == 'susunkata' ? 2989 : 3499;
+		
+					if (jawabBenar) {
+						db.users[m.sender].uang += bonus;
+						await farid.sendButtonMsg(m.chat, {
+							caption: `Jawaban Benar 🎉\nBonus Uang 💰 *+${bonus}*`,
+							footer: `Game: ${gameName}`,
+							buttons: [
+								{ buttonId: `.${gameName}`, buttonText: { displayText: 'Next' }, type: 1 }
+							]
+						}, { quoted: m });
+						delete game[m.chat + id];
+					} else m.reply('*Jawaban Salah!*');
 				}
 			}
 		}
-		
 		// Family 100
 		if (m.chat in family100) {
 			if (m.quoted && m.quoted.id == family100[m.chat].id && !isCmd) {
@@ -567,6 +586,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 				if (isWin || isSurender) delete family100[m.chat]
 			}
 		}
+		
 		
 		// Chess
 		if ((!isCmd || isCreator) && (m.sender in chess)) {
