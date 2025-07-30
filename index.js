@@ -128,10 +128,10 @@ async function startNazeBot() {
 			return msg?.message || ''
 		}
 		return {
-			conversation: 'Halo Saya ti Bot'
+			conversation: 'Halo Saya Ti Bot'
 		}
 	}
-		
+	
 	const naze = WAConnection({
 		logger: level,
 		getMessage,
@@ -143,6 +143,7 @@ async function startNazeBot() {
 		connectTimeoutMs: 60000,
 		browser: Browsers.ubuntu('Chrome'),
 		generateHighQualityLinkPreview: true,
+		//waWebSocketUrl: 'wss://web.whatsapp.com/ws',
 		cachedGroupMetadata: async (jid) => store.groupMetadata[jid],
 		shouldSyncHistoryMessage: msg => {
 			console.log(`\x1b[32mMemuat Chat [${msg.progress || 0}%]\x1b[39m`);
@@ -160,11 +161,8 @@ async function startNazeBot() {
 			creds: state.creds,
 			keys: makeCacheableSignalKeyStore(state.keys, level),
 		},
-		ignoreBroadcastMessages: true,
-		shouldIgnoreJid: jid => jid === 'status@broadcast',
 	})
 	
-		
 	if (pairingCode && !phoneNumber && !naze.authState.creds.registered) {
 		async function getPhoneNumber() {
 			phoneNumber = global.number_bot ? global.number_bot : process.env.BOT_NUMBER || await question('Please type your WhatsApp number : ');
