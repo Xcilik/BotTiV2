@@ -3929,609 +3929,308 @@ module.exports = naze = async (naze, m, msg, store) => {
 			
 			// Menu
 			case 'menu': {
-				if (args[0] == 'set') {
-					if (['1','2','3'].includes(args[1])) {
-						set.template = parseInt(Number(args[1]))
-						m.reply('Sukses Mengubah Template Menu')
-					} else m.reply(`Silahkan Pilih Templat:\n- 1 (Button Menu)\n- 2 (List Menu)\n- 3 (Document Menu)`)
-				} else await templateMenu(naze, set.template, m, prefix, setv, db, { botNumber, author, packname, isVip, isPremium })
-			}
-			break
-			case 'allmenu': {
-				let profile
-				try {
-					profile = await naze.profilePictureUrl(m.sender, 'image');
-				} catch (e) {
-					profile = fake.anonim
-				}
-				const menunya = `
-╭──❍「 *USER INFO* 」❍
-├ *Nama* : ${m.pushName ? m.pushName : 'Tanpa Nama'}
-├ *Id* : @${m.sender.split('@')[0]}
-├ *User* : ${isVip ? 'VIP' : isPremium ? 'PREMIUM' : 'FREE'}
-├ *Limit* : ${isVip ? 'VIP' : db.users[m.sender].limit }
-├ *Money* : ${db.users[m.sender] ? db.users[m.sender].money.toLocaleString('id-ID') : '0'}
-╰─┬────❍
-╭─┴─❍「 *BOT INFO* 」❍
-├ *Nama Bot* : ${db?.set?.[botNumber]?.botname || 'Naze Bot'}
-├ *Powered* : @${'0@s.whatsapp.net'.split('@')[0]}
-├ *Owner* : @${ownerNumber[0].split('@')[0]}
-├ *Mode* : ${naze.public ? 'Public' : 'Self'}
-├ *Prefix* :${set.multiprefix ? '「 MULTI-PREFIX 」' : ' *'+prefix+'*' }
-├ *Premium Feature* : 🔸️
-╰─┬────❍
-╭─┴─❍「 *ABOUT* 」❍
-├ *Tanggal* : ${tanggal}
-├ *Hari* : ${hari}
-├ *Jam* : ${jam} WIB
-╰──────❍
-╭──❍「 *BOT* 」❍
-│${setv} ${prefix}profile
-│${setv} ${prefix}claim
-│${setv} ${prefix}buy [item] (nominal)
-│${setv} ${prefix}transfer
-│${setv} ${prefix}leaderboard
-│${setv} ${prefix}request (text)
-│${setv} ${prefix}react (emoji)
-│${setv} ${prefix}tagme
-│${setv} ${prefix}runtime
-│${setv} ${prefix}totalfitur
-│${setv} ${prefix}speed
-│${setv} ${prefix}ping
-│${setv} ${prefix}afk
-│${setv} ${prefix}rvo (reply pesan viewone)
-│${setv} ${prefix}inspect (url gc)
-│${setv} ${prefix}addmsg
-│${setv} ${prefix}delmsg
-│${setv} ${prefix}getmsg
-│${setv} ${prefix}listmsg
-│${setv} ${prefix}setcmd
-│${setv} ${prefix}delcmd
-│${setv} ${prefix}listcmd
-│${setv} ${prefix}lockcmd
-│${setv} ${prefix}q (reply pesan)
-│${setv} ${prefix}menfes (62xxx|fake name)
-│${setv} ${prefix}confes (62xxx|fake name)
-│${setv} ${prefix}roomai
-│${setv} ${prefix}jadibot 🔸️
-│${setv} ${prefix}stopjadibot
-│${setv} ${prefix}listjadibot
-│${setv} ${prefix}donasi
-│${setv} ${prefix}addsewa
-│${setv} ${prefix}delsewa
-│${setv} ${prefix}listsewa
-╰─┬────❍
-╭─┴❍「 *GROUP* 」❍
-│${setv} ${prefix}add (62xxx)
-│${setv} ${prefix}kick (@tag/62xxx)
-│${setv} ${prefix}promote (@tag/62xxx)
-│${setv} ${prefix}demote (@tag/62xxx)
-│${setv} ${prefix}warn (@tag/62xxx)
-│${setv} ${prefix}unwarn (@tag/62xxx)
-│${setv} ${prefix}setname (nama baru gc)
-│${setv} ${prefix}setdesc (desk)
-│${setv} ${prefix}setppgc (reply imgnya)
-│${setv} ${prefix}delete (reply pesan)
-│${setv} ${prefix}linkgrup
-│${setv} ${prefix}revoke
-│${setv} ${prefix}tagall
-│${setv} ${prefix}pin
-│${setv} ${prefix}unpin
-│${setv} ${prefix}hidetag
-│${setv} ${prefix}totag (reply pesan)
-│${setv} ${prefix}listonline
-│${setv} ${prefix}group set
-│${setv} ${prefix}group (khusus admin)
-╰─┬────❍
-╭─┴❍「 *SEARCH* 」❍
-│${setv} ${prefix}ytsearch (query)
-│${setv} ${prefix}spotify (query)
-│${setv} ${prefix}pixiv (query)
-│${setv} ${prefix}pinterest (query)
-│${setv} ${prefix}wallpaper (query)
-│${setv} ${prefix}ringtone (query)
-│${setv} ${prefix}google (query)
-│${setv} ${prefix}gimage (query)
-│${setv} ${prefix}npm (query)
-│${setv} ${prefix}style (query)
-│${setv} ${prefix}cuaca (kota)
-│${setv} ${prefix}tenor (query)
-│${setv} ${prefix}urban (query)
-╰─┬────❍
-╭─┴❍「 *DOWNLOAD* 」❍
-│${setv} ${prefix}ytmp3 (url)
-│${setv} ${prefix}ytmp4 (url)
-│${setv} ${prefix}instagram (url)
-│${setv} ${prefix}tiktok (url)
-│${setv} ${prefix}tiktokmp3 (url)
-│${setv} ${prefix}facebook (url)
-│${setv} ${prefix}spotifydl (url)
-│${setv} ${prefix}mediafire (url)
-╰─┬────❍
-╭─┴❍「 *QUOTES* 」❍
-│${setv} ${prefix}motivasi
-│${setv} ${prefix}quotes
-│${setv} ${prefix}truth
-│${setv} ${prefix}bijak
-│${setv} ${prefix}dare
-│${setv} ${prefix}bucin
-│${setv} ${prefix}renungan
-╰─┬────❍
-╭─┴❍「 *TOOLS* 」❍
-│${setv} ${prefix}get (url) 🔸️
-│${setv} ${prefix}hd (reply pesan)
-│${setv} ${prefix}toaudio (reply pesan)
-│${setv} ${prefix}tomp3 (reply pesan)
-│${setv} ${prefix}tovn (reply pesan)
-│${setv} ${prefix}toimage (reply pesan)
-│${setv} ${prefix}toptv (reply pesan)
-│${setv} ${prefix}tourl (reply pesan)
-│${setv} ${prefix}tts (textnya)
-│${setv} ${prefix}toqr (textnya)
-│${setv} ${prefix}brat (textnya)
-│${setv} ${prefix}bratvid (textnya)
-│${setv} ${prefix}ssweb (url) 🔸️
-│${setv} ${prefix}sticker (send/reply img)
-│${setv} ${prefix}colong (reply stiker)
-│${setv} ${prefix}smeme (send/reply img)
-│${setv} ${prefix}dehaze (send/reply img)
-│${setv} ${prefix}colorize (send/reply img)
-│${setv} ${prefix}hitamkan (send/reply img)
-│${setv} ${prefix}emojimix 🙃+💀
-│${setv} ${prefix}nulis
-│${setv} ${prefix}readmore text1|text2
-│${setv} ${prefix}qc (pesannya)
-│${setv} ${prefix}translate
-│${setv} ${prefix}wasted (send/reply img)
-│${setv} ${prefix}triggered (send/reply img)
-│${setv} ${prefix}shorturl (urlnya)
-│${setv} ${prefix}gitclone (urlnya)
-│${setv} ${prefix}fat (reply audio)
-│${setv} ${prefix}fast (reply audio)
-│${setv} ${prefix}bass (reply audio)
-│${setv} ${prefix}slow (reply audio)
-│${setv} ${prefix}tupai (reply audio)
-│${setv} ${prefix}deep (reply audio)
-│${setv} ${prefix}robot (reply audio)
-│${setv} ${prefix}blown (reply audio)
-│${setv} ${prefix}reverse (reply audio)
-│${setv} ${prefix}smooth (reply audio)
-│${setv} ${prefix}earrape (reply audio)
-│${setv} ${prefix}nightcore (reply audio)
-│${setv} ${prefix}getexif (reply sticker)
-╰─┬────❍
-╭─┴❍「 *AI* 」❍
-│${setv} ${prefix}ai (query)
-│${setv} ${prefix}simi (query)
-│${setv} ${prefix}gemini (query)
-│${setv} ${prefix}txt2img (query)
-╰─┬────❍
-╭─┴❍「 *ANIME* 」❍
-│${setv} ${prefix}waifu
-│${setv} ${prefix}neko
-╰─┬────❍
-╭─┴❍「 *GAME* 」❍
-│${setv} ${prefix}tictactoe
-│${setv} ${prefix}akinator
-│${setv} ${prefix}suit
-│${setv} ${prefix}slot
-│${setv} ${prefix}math (level)
-│${setv} ${prefix}begal
-│${setv} ${prefix}ulartangga
-│${setv} ${prefix}blackjack
-│${setv} ${prefix}catur
-│${setv} ${prefix}casino (nominal)
-│${setv} ${prefix}samgong (nominal)
-│${setv} ${prefix}rampok (@tag)
-│${setv} ${prefix}tekateki
-│${setv} ${prefix}tebaklirik
-│${setv} ${prefix}tebakkata
-│${setv} ${prefix}tebakbom
-│${setv} ${prefix}susunkata
-│${setv} ${prefix}colorblind
-│${setv} ${prefix}tebakkimia
-│${setv} ${prefix}caklontong
-│${setv} ${prefix}tebakangka
-│${setv} ${prefix}tebaknegara
-│${setv} ${prefix}tebakgambar
-│${setv} ${prefix}tebakbendera
-╰─┬────❍
-╭─┴❍「 *FUN* 」❍
-│${setv} ${prefix}coba
-│${setv} ${prefix}dadu
-│${setv} ${prefix}bisakah (text)
-│${setv} ${prefix}apakah (text)
-│${setv} ${prefix}kapan (text)
-│${setv} ${prefix}siapa (text)
-│${setv} ${prefix}kerangajaib (text)
-│${setv} ${prefix}cekmati (nama lu)
-│${setv} ${prefix}ceksifat
-│${setv} ${prefix}cekkhodam (nama lu)
-│${setv} ${prefix}rate (reply pesan)
-│${setv} ${prefix}jodohku
-│${setv} ${prefix}jadian
-│${setv} ${prefix}fitnah
-│${setv} ${prefix}halah (text)
-│${setv} ${prefix}hilih (text)
-│${setv} ${prefix}huluh (text)
-│${setv} ${prefix}heleh (text)
-│${setv} ${prefix}holoh (text)
-╰─┬────❍
-╭─┴❍「 *RANDOM* 」❍
-│${setv} ${prefix}coffe
-╰─┬────❍
-╭─┴❍「 *STALKER* 」❍
-│${setv} ${prefix}wastalk
-│${setv} ${prefix}telestalk
-│${setv} ${prefix}igstalk
-│${setv} ${prefix}tiktokstalk
-│${setv} ${prefix}githubstalk
-│${setv} ${prefix}genshinstalk
-╰─┬────❍
-╭─┴❍「 *OWNER* 」❍
-│${setv} ${prefix}bot [set]
-│${setv} ${prefix}setbio
-│${setv} ${prefix}setppbot
-│${setv} ${prefix}join
-│${setv} ${prefix}leave
-│${setv} ${prefix}block
-│${setv} ${prefix}listblock
-│${setv} ${prefix}openblock
-│${setv} ${prefix}listpc
-│${setv} ${prefix}listgc
-│${setv} ${prefix}ban
-│${setv} ${prefix}unban
-│${setv} ${prefix}mute
-│${setv} ${prefix}unmute
-│${setv} ${prefix}creategc
-│${setv} ${prefix}clearchat
-│${setv} ${prefix}addprem
-│${setv} ${prefix}delprem
-│${setv} ${prefix}listprem
-│${setv} ${prefix}addlimit
-│${setv} ${prefix}adduang
-│${setv} ${prefix}setbotauthor
-│${setv} ${prefix}setbotname
-│${setv} ${prefix}setbotpackname
-│${setv} ${prefix}addowner
-│${setv} ${prefix}delowner
-│${setv} ${prefix}getmsgstore
-│${setv} ${prefix}bot --settings
-│${setv} ${prefix}bot settings
-│${setv} ${prefix}getsession
-│${setv} ${prefix}delsession
-│${setv} ${prefix}delsampah
-│${setv} ${prefix}upsw
-│${setv} ${prefix}backup
-│${setv} $
-│${setv} >
-│${setv} <
-╰──────❍`
-				await m.reply({
-					document: fake.docs,
-					fileName: ucapanWaktu,
-					mimetype: pickRandom(fake.listfakedocs),
-					fileLength: '100000000000000',
-					pageCount: '999',
-					caption: menunya,
-					contextInfo: {
-						mentionedJid: [m.sender, '0@s.whatsapp.net', ownerNumber[0] + '@s.whatsapp.net'],
-						forwardingScore: 10,
-						isForwarded: true,
-						forwardedNewsletterMessageInfo: {
-							newsletterJid: my.ch,
-							serverMessageId: null,
-							newsletterName: 'Join For More Info'
-						},
-						externalAdReply: {
-							title: author,
-							body: packname,
-							showAdAttribution: true,
-							thumbnailUrl: profile,
-							mediaType: 1,
-							previewType: 0,
-							renderLargerThumbnail: true,
-							mediaUrl: my.gh,
-							sourceUrl: my.gh,
-						}
+				const iosUser = '6289652411405';
+				const sender = m.sender || m.key.participant || m.key.remoteJid;
+				const name = await naze.getName(sender); // Mengambil nama user
+			
+				const caption = `Halo, *${name}* 👋\n\nAku Ti Assistant 🤖`;
+			
+				const buttons = [
+					{
+						buttonId: `${prefix}allmenu`,
+						buttonText: { displayText: '📜 All Menu' },
+						type: 1
 					}
-				})
+				];
+			
+				if (!sender.includes(iosUser)) {
+					buttons.push({
+						buttonId: 'list_button',
+						buttonText: { displayText: '📋 List Menu' },
+						nativeFlowInfo: {
+							name: 'single_select',
+							paramsJson: JSON.stringify({
+								title: 'List Menu',
+								sections: [{
+									title: 'List Menu Ti Assistant',
+									rows: [
+										{ title: '🚀 All Menu', id: `${prefix}allmenu` },
+										{ title: '🔧 Bot Menu', id: `${prefix}botmenu` },
+										{ title: '👥 Group Menu', id: `${prefix}groupmenu` },
+										{ title: '📥 Downloader Menu', id: `${prefix}downloadermenu` },
+										{ title: '💬 Quotes Menu', id: `${prefix}quotesmenu` },
+										{ title: '🛠️ Tools Menu', id: `${prefix}toolsmenu` },
+										{ title: '🤖 Ai Menu', id: `${prefix}aimenu` },
+										{ title: '🔍 Stalker Menu', id: `${prefix}stalkermenu` },
+										{ title: '🎮 Game Menu', id: `${prefix}gamemenu` },
+										{ title: '🎉 Fun Menu', id: `${prefix}funmenu` },
+									]
+								}]
+							})
+						},
+						type: 2
+					});
+				}
+			
+				await naze.sendButtonMsg(m.chat, {
+					image: global.ImgTi,
+					caption: caption,
+					footer: 'Silahkan tekan tombol dibawah ini untuk melihat Daftar Menu:',
+					buttons: buttons,
+					headerType: 4
+				}, { quoted: m });
+				
+			}
+			break;
+			
+			  
+			  
+			
+			case 'allmenu': {
+
+				const menunya = `
+*🚀 Daftar Menu Ti Assistant Bot:*
+
+
+*🔧 Bot Menu*
+${setv} ${prefix}dev (text)  
+${setv} ${prefix}afk  
+${setv} ${prefix}addnote
+${setv} ${prefix}delnote
+${setv} ${prefix}getnote 
+${setv} ${prefix}notes  
+${setv} ${prefix}ping
+
+*👥 Grup*
+${setv} ${prefix}add (62xxx)  
+${setv} ${prefix}kick (@tag/62xxx)  
+${setv} ${prefix}promote (@tag/62xxx)  
+${setv} ${prefix}demote (@tag/62xxx)  
+${setv} ${prefix}warn (@tag/62xxx)  
+${setv} ${prefix}setname (title name)  
+${setv} ${prefix}setdesc (deskripsi grup)  
+${setv} ${prefix}setppgc (reply gambar)  
+${setv} ${prefix}delete (reply pesan)  
+${setv} ${prefix}linkgrup 
+${setv} ${prefix}tagall  
+${setv} ${prefix}hidetag  
+${setv} ${prefix}totag (reply pesan)  
+${setv} ${prefix}listonline  
+${setv} ${prefix}group set  
+
+
+📥 *Media Downloader*
+${setv} ${prefix}play (judul)  
+${setv} ${prefix}ytmp3 (url)  
+${setv} ${prefix}ytmp4 (url)  
+${setv} ${prefix}instagram (url)  
+${setv} ${prefix}tiktokaudio (url)  
+${setv} ${prefix}tiktokmp3 (url)  
+${setv} ${prefix}tiktokvideo (url)  
+${setv} ${prefix}tiktokmp4 (url)  
+${setv} ${prefix}facebook (url)  
+${setv} ${prefix}spotifydl (url)  
+${setv} ${prefix}mediafire (url)  
+
+💬 *Quotes*
+${setv} ${prefix}motivasi  
+${setv} ${prefix}quotes  
+${setv} ${prefix}truth  
+${setv} ${prefix}dare  
+${setv} ${prefix}bijak  
+${setv} ${prefix}bucin  
+
+🛠️ *Tools*
+${setv} ${prefix}toaudio (reply pesan)  
+${setv} ${prefix}tomp3 (reply pesan)  
+${setv} ${prefix}tovn (reply pesan)  
+${setv} ${prefix}toimage (reply pesan)  
+${setv} ${prefix}toptv (reply pesan)  
+${setv} ${prefix}tourl (reply pesan)  
+${setv} ${prefix}tts (text)  
+${setv} ${prefix}toqr (text)  
+${setv} ${prefix}brat (text)  
+${setv} ${prefix}bratvid (text)  
+${setv} ${prefix}sticker (kirim/reply gambar)  
+${setv} ${prefix}translate  
+${setv} ${prefix}shorturl (url)
+${setv} ${prefix}cuaca (nama kota)   
+${setv} ${prefix}smeme textatas|textbawah 
+
+🤖 *AI*
+${setv} ${prefix}ai (query)  
+${setv} ${prefix}gemini (query)  
+${setv} ${prefix}chatai  
+
+🎮 *Game*
+${setv} ${prefix}suit
+${setv} ${prefix}math (level)  
+${setv} ${prefix}tekateki  
+${setv} ${prefix}tebaklirik  
+${setv} ${prefix}tebakangka
+${setv} ${prefix}tebakbom
+${setv} ${prefix}tebakkata  
+${setv} ${prefix}susunkata  
+${setv} ${prefix}tebakgambar  
+${setv} ${prefix}tebakbendera  
+
+🎉 *Fun*
+${setv} ${prefix}dadu  
+${setv} ${prefix}kerangajaib (text)  
+${setv} ${prefix}cekmati (nama kamu)  
+${setv} ${prefix}ceksifat  
+${setv} ${prefix}cekkhodam (nama kamu)  
+${setv} ${prefix}jodohku  
+${setv} ${prefix}jadian   
+
+🔍 *Stalker*
+${setv} ${prefix}wastalk  
+${setv} ${prefix}telestalk  
+${setv} ${prefix}tiktokstalk  
+${setv} ${prefix}githubstalk `
+
+
+			m.reply({text: menunya});
 			}
 			break
+
 			case 'botmenu': {
 				m.reply(`
-╭──❍「 *BOT* 」❍
-│${setv} ${prefix}profile
-│${setv} ${prefix}claim
-│${setv} ${prefix}buy [item] (nominal)
-│${setv} ${prefix}transfer
-│${setv} ${prefix}leaderboard
-│${setv} ${prefix}request (text)
-│${setv} ${prefix}react (emoji)
-│${setv} ${prefix}tagme
-│${setv} ${prefix}runtime
-│${setv} ${prefix}totalfitur
-│${setv} ${prefix}speed
-│${setv} ${prefix}ping
-│${setv} ${prefix}afk
-│${setv} ${prefix}rvo (reply pesan viewone)
-│${setv} ${prefix}inspect (url gc)
-│${setv} ${prefix}addmsg
-│${setv} ${prefix}delmsg
-│${setv} ${prefix}getmsg
-│${setv} ${prefix}listmsg
-│${setv} ${prefix}setcmd
-│${setv} ${prefix}delcmd
-│${setv} ${prefix}listcmd
-│${setv} ${prefix}lockcmd
-│${setv} ${prefix}q (reply pesan)
-│${setv} ${prefix}menfes (62xxx|fake name)
-│${setv} ${prefix}confes (62xxx|fake name)
-│${setv} ${prefix}roomai
-│${setv} ${prefix}jadibot 🔸️
-│${setv} ${prefix}stopjadibot
-│${setv} ${prefix}listjadibot
-│${setv} ${prefix}donasi
-│${setv} ${prefix}addsewa
-│${setv} ${prefix}delsewa
-│${setv} ${prefix}listsewa
-╰──────❍`)
+*🔧 Bot Mnu*
+
+${setv} ${prefix}*dev (text)* - untuk request fitur, saran, atau laporan bug ke developer.
+${setv} ${prefix}*afk (alasan)* - menandai kamu sedang AFK (Away From Keyboard), agar pengguna lain tahu kamu sedang tidak aktif.
+${setv} ${prefix}*addnote (name)* - menambahkan catatan pribadi yang bisa disimpan oleh bot.
+${setv} ${prefix}*delnote (name)* - menghapus catatan tertentu yang telah kamu buat sebelumnya.
+${setv} ${prefix}*getnote (name)* - menampilkan isi dari catatan yang sudah disimpan.
+${setv} ${prefix}*notes* - menampilkan daftar semua catatan yang telah kamu buat.
+${setv} ${prefix}*ping* - mengecek respon atau kecepatan bot (latency).`)
 			}
 			break
 			case 'groupmenu': {
 				m.reply(`
-╭──❍「 *GROUP* 」❍
-│${setv} ${prefix}add (62xxx)
-│${setv} ${prefix}kick (@tag/62xxx)
-│${setv} ${prefix}promote (@tag/62xxx)
-│${setv} ${prefix}demote (@tag/62xxx)
-│${setv} ${prefix}warn (@tag/62xxx)
-│${setv} ${prefix}unwarn (@tag/62xxx)
-│${setv} ${prefix}setname (nama baru gc)
-│${setv} ${prefix}setdesc (desk)
-│${setv} ${prefix}setppgc (reply imgnya)
-│${setv} ${prefix}delete (reply pesan)
-│${setv} ${prefix}linkgrup
-│${setv} ${prefix}revoke
-│${setv} ${prefix}tagall
-│${setv} ${prefix}pin
-│${setv} ${prefix}unpin
-│${setv} ${prefix}hidetag
-│${setv} ${prefix}totag (reply pesan)
-│${setv} ${prefix}listonline
-│${setv} ${prefix}group set
-│${setv} ${prefix}group (khusus admin)
-╰──────❍`)
+*👥 Grup*
+
+${setv} ${prefix}*add (62xxx)* - menambahkan anggota ke grup.
+${setv} ${prefix}*kick (@tag/62xxx)* - mengeluarkan anggota dari grup.
+${setv} ${prefix}*promote (@tag/62xxx)* - menjadikan anggota sebagai admin.
+${setv} ${prefix}*demote (@tag/62xxx)* - mencabut hak admin dari anggota.
+${setv} ${prefix}*warn (@tag/62xxx)* - memberikan peringatan ke anggota grup.
+${setv} ${prefix}*setname (nama baru gc)* - mengganti nama grup.
+${setv} ${prefix}*setdesc (desk)* - mengubah deskripsi grup.
+${setv} ${prefix}*setppgc (reply imgnya)*- mengganti foto profil grup dengan cara reply ke gambar.
+${setv} ${prefix}*delete (reply pesan)* - menghapus pesan yang dibalas.
+${setv} ${prefix}*linkgrup* - menampilkan link undangan grup.
+${setv} ${prefix}*tagall* - menandai semua anggota grup.
+${setv} ${prefix}*hidetag* - mengirim pesan mention tersembunyi ke semua anggota.
+${setv} ${prefix}*totag (reply pesan)* - mengubah pesan yang dibalas menjadi mention untuk semua anggota.
+${setv} ${prefix}*listonline* - menampilkan siapa saja yang sedang online.
+${setv} ${prefix}*group set* - mengatur siapa saja yang bisa mengirim pesan di grup.
+`)
 			}
 			break
-			case 'searchmenu': {
+			case 'downloadermenu': {
 				m.reply(`
-╭──❍「 *SEARCH* 」❍
-│${setv} ${prefix}ytsearch (query)
-│${setv} ${prefix}spotify (query)
-│${setv} ${prefix}pixiv (query)
-│${setv} ${prefix}pinterest (query)
-│${setv} ${prefix}wallpaper (query)
-│${setv} ${prefix}ringtone (query)
-│${setv} ${prefix}google (query)
-│${setv} ${prefix}gimage (query)
-│${setv} ${prefix}npm (query)
-│${setv} ${prefix}style (query)
-│${setv} ${prefix}cuaca (kota)
-│${setv} ${prefix}tenor (query)
-│${setv} ${prefix}urban (query)
-╰──────❍`)
-			}
-			break
-			case 'downloadmenu': {
-				m.reply(`
-╭──❍「 *DOWNLOAD* 」❍
-│${setv} ${prefix}ytmp3 (url)
-│${setv} ${prefix}ytmp4 (url)
-│${setv} ${prefix}instagram (url)
-│${setv} ${prefix}tiktok (url)
-│${setv} ${prefix}tiktokmp3 (url)
-│${setv} ${prefix}facebook (url)
-│${setv} ${prefix}spotifydl (url)
-│${setv} ${prefix}mediafire (url)
-╰──────❍`)
+📥 *Media Downloader*
+
+${setv} ${prefix}*play (judul)* - mencari dan memutar audio dari YouTube berdasarkan judul.
+${setv} ${prefix}*ytmp3 (url)* - mengunduh audio dari video YouTube dalam format MP3.
+${setv} ${prefix}*ytmp4 (url)* - mengunduh video YouTube dalam format MP4.
+${setv} ${prefix}*instagram (url)* - mengunduh media (foto/video) dari Instagram.
+${setv} ${prefix}*tiktokaudio (url)* - mengunduh audio dari video TikTok.
+${setv} ${prefix}*tiktokmp3 (url)* - mengunduh musik dari TikTok dalam format MP3.
+${setv} ${prefix}*tiktokvideo (url)* - mengunduh video TikTok dengan watermark.
+${setv} ${prefix}*tiktokmp4 (url)* - mengunduh video TikTok tanpa watermark.
+${setv} ${prefix}*facebook (url)* - mengunduh video dari Facebook.
+${setv} ${prefix}*spotifydl (url)* - mengunduh lagu dari Spotify.
+${setv} ${prefix}*mediafire (url)* - mengunduh file dari Mediafire.`)
 			}
 			break
 			case 'quotesmenu': {
 				m.reply(`
-╭──❍「 *QUOTES* 」❍
-│${setv} ${prefix}motivasi
-│${setv} ${prefix}quotes
-│${setv} ${prefix}truth
-│${setv} ${prefix}bijak
-│${setv} ${prefix}dare
-│${setv} ${prefix}bucin
-│${setv} ${prefix}renungan
-╰──────❍`)
+*💬 Quotes*
+
+${setv} ${prefix}*motivasi* - menampilkan kutipan motivasi untuk menyemangati harimu.
+${setv} ${prefix}*quotes* - menampilkan kutipan acak dari berbagai topik.
+${setv} ${prefix}*truth* - memberikan pertanyaan "truth" untuk permainan atau interaksi.
+${setv} ${prefix}*dare* - memberikan tantangan "dare" untuk permainan atau tantangan lucu.
+${setv} ${prefix}*bijak* - menampilkan kutipan bijak dan penuh makna.
+${setv} ${prefix}*bucin* - menampilkan kata-kata bucin (budak cinta) yang romantis atau lucu.`)
 			}
 			break
 			case 'toolsmenu': {
 				m.reply(`
-╭──❍「 *TOOLS* 」❍
-│${setv} ${prefix}get (url) 🔸️
-│${setv} ${prefix}hd (reply pesan)
-│${setv} ${prefix}toaudio (reply pesan)
-│${setv} ${prefix}tomp3 (reply pesan)
-│${setv} ${prefix}tovn (reply pesan)
-│${setv} ${prefix}toimage (reply pesan)
-│${setv} ${prefix}toptv (reply pesan)
-│${setv} ${prefix}tourl (reply pesan)
-│${setv} ${prefix}tts (textnya)
-│${setv} ${prefix}toqr (textnya)
-│${setv} ${prefix}brat (textnya)
-│${setv} ${prefix}bratvid (textnya)
-│${setv} ${prefix}ssweb (url) 🔸️
-│${setv} ${prefix}sticker (send/reply img)
-│${setv} ${prefix}colong (reply stiker)
-│${setv} ${prefix}smeme (send/reply img)
-│${setv} ${prefix}dehaze (send/reply img)
-│${setv} ${prefix}colorize (send/reply img)
-│${setv} ${prefix}hitamkan (send/reply img)
-│${setv} ${prefix}emojimix 🙃+💀
-│${setv} ${prefix}nulis
-│${setv} ${prefix}readmore text1|text2
-│${setv} ${prefix}qc (pesannya)
-│${setv} ${prefix}translate
-│${setv} ${prefix}wasted (send/reply img)
-│${setv} ${prefix}triggered (send/reply img)
-│${setv} ${prefix}shorturl (urlnya)
-│${setv} ${prefix}gitclone (urlnya)
-│${setv} ${prefix}fat (reply audio)
-│${setv} ${prefix}fast (reply audio)
-│${setv} ${prefix}bass (reply audio)
-│${setv} ${prefix}slow (reply audio)
-│${setv} ${prefix}tupai (reply audio)
-│${setv} ${prefix}deep (reply audio)
-│${setv} ${prefix}robot (reply audio)
-│${setv} ${prefix}blown (reply audio)
-│${setv} ${prefix}reverse (reply audio)
-│${setv} ${prefix}smooth (reply audio)
-│${setv} ${prefix}earrape (reply audio)
-│${setv} ${prefix}nightcore (reply audio)
-│${setv} ${prefix}getexif (reply sticker)
-╰──────❍`)
+*🛠️ Tools*
+
+${setv} ${prefix}*toaudio (reply pesan)* - mengubah video atau voice note menjadi audio biasa.
+${setv} ${prefix}*tomp3 (reply pesan)* - mengonversi media ke format MP3.
+${setv} ${prefix}*tovn (reply pesan)* - mengubah audio menjadi voice note (VN).
+${setv} ${prefix}*toimage (reply pesan)* - mengubah stiker menjadi gambar biasa.
+${setv} ${prefix}*toptv (reply pesan)* - mengubah media jadi format video pendek seperti di TV.
+${setv} ${prefix}*tourl (reply pesan)* - mengupload media ke internet dan menghasilkan tautan.
+${setv} ${prefix}*tts (text)* - mengubah teks menjadi suara (Text to Speech).
+${setv} ${prefix}*toqr (text)* - mengubah teks menjadi kode QR.
+${setv} ${prefix}*brat (text)* - membuat gambar AI berdasarkan teks prompt (pakai model Brat).
+${setv} ${prefix}*bratvid (text)* - membuat video pendek berbasis AI dari teks prompt.
+${setv} ${prefix}*sticker (kirim/reply gambar)* - membuat stiker dari gambar yang dikirim atau direply.
+${setv} ${prefix}*translate* - menerjemahkan pesan yang direply ke bahasa lain.
+${setv} ${prefix}*shorturl (url)* - memendekkan URL agar lebih ringkas.
+${setv} ${prefix}*cuaca (nama kota)* - menampilkan informasi cuaca berdasarkan nama kota.
+${setv} ${prefix}*smeme* textatas|textbawah - memberikan text pada stiker.
+`)
 			}
 			break
 			case 'aimenu': {
 				m.reply(`
-╭──❍「 *AI* 」❍
-│${setv} ${prefix}ai (query)
-│${setv} ${prefix}simi (query)
-│${setv} ${prefix}gemini (query)
-│${setv} ${prefix}txt2img (query)
-╰──────❍`)
-			}
-			break
-			case 'randommenu': {
-				m.reply(`
-╭──❍「 *RANDOM* 」❍
-│${setv} ${prefix}coffe
-╰──────❍`)
+*🤖 AI*
+
+${setv} ${prefix}*ai (query)* - mengajukan pertanyaan atau permintaan ke model AI.
+${setv} ${prefix}*gemini (query)* - menggunakan model Gemini untuk menjawab atau menghasilkan teks.
+${setv} ${prefix}*chatai* - mengakses fitur percakapan dengan chatbot berbasis AI.
+
+`)
 			}
 			break
 			case 'stalkermenu': {
 				m.reply(`
-╭──❍「 *STALKER* 」❍
-│${setv} ${prefix}wastalk
-│${setv} ${prefix}telestalk
-│${setv} ${prefix}igstalk
-│${setv} ${prefix}tiktokstalk
-│${setv} ${prefix}githubstalk
-│${setv} ${prefix}genshinstalk
-╰──────❍`)
-			}
-			break
-			case 'animemenu': {
-				m.reply(`
-╭──❍「 *ANIME* 」❍
-│${setv} ${prefix}waifu
-│${setv} ${prefix}neko
-╰──────❍`)
+*🔍 Stalker*
+
+${setv} ${prefix}*wastalk* - melihat detail akun WhatsApp.
+${setv} ${prefix}*telestalk* - melihat detail akun Telegram.
+${setv} ${prefix}*tiktokstalk* - melihat detail akun TikTok.
+${setv} ${prefix}*githubstalk* - melihat detail akun GitHub.`)
 			}
 			break
 			case 'gamemenu': {
 				m.reply(`
-╭──❍「 *GAME* 」❍
-│${setv} ${prefix}tictactoe
-│${setv} ${prefix}akinator
-│${setv} ${prefix}suit
-│${setv} ${prefix}slot
-│${setv} ${prefix}math (level)
-│${setv} ${prefix}begal
-│${setv} ${prefix}ulartangga
-│${setv} ${prefix}blackjack
-│${setv} ${prefix}catur
-│${setv} ${prefix}casino (nominal)
-│${setv} ${prefix}samgong (nominal)
-│${setv} ${prefix}rampok (@tag)
-│${setv} ${prefix}tekateki
-│${setv} ${prefix}tebaklirik
-│${setv} ${prefix}tebakkata
-│${setv} ${prefix}tebakbom
-│${setv} ${prefix}susunkata
-│${setv} ${prefix}colorblind
-│${setv} ${prefix}tebakkimia
-│${setv} ${prefix}caklontong
-│${setv} ${prefix}tebakangka
-│${setv} ${prefix}tebaknegara
-│${setv} ${prefix}tebakgambar
-│${setv} ${prefix}tebakbendera
-╰──────❍`)
+🎮 *Game*
+
+${setv} ${prefix}*suit (@tag)* - bermain permainan suit (batu, gunting, kertas) dengan bot.
+${setv} ${prefix}*math (level)* - bermain permainan matematika berdasarkan level yang dipilih.
+${setv} ${prefix}*tekateki* - bermain teka-teki untuk menguji pengetahuanmu.
+${setv} ${prefix}*tebaklirik* - permainan tebak lirik lagu yang diputar.
+${setv} ${prefix}*tebakangka* - menebak angka yang dipilih secara acak.
+${setv} ${prefix}*tebakbom* - permainan tebak bom yang menantang.
+${setv} ${prefix}*tebakkata* - permainan tebak kata untuk mengasah kosakata.
+${setv} ${prefix}*susunkata* - permainan menyusun kata dari huruf yang tersedia.
+${setv} ${prefix}*tebakgambar* - permainan menebak gambar yang diberikan.
+${setv} ${prefix}*tebakbendera* - permainan menebak bendera negara berdasarkan gambarnya.`)
 			}
 			break
 			case 'funmenu': {
 				m.reply(`
-╭──❍「 *FUN* 」❍
-│${setv} ${prefix}coba
-│${setv} ${prefix}dadu
-│${setv} ${prefix}bisakah (text)
-│${setv} ${prefix}apakah (text)
-│${setv} ${prefix}kapan (text)
-│${setv} ${prefix}siapa (text)
-│${setv} ${prefix}kerangajaib (text)
-│${setv} ${prefix}cekmati (nama lu)
-│${setv} ${prefix}ceksifat
-│${setv} ${prefix}cekkhodam (nama lu)
-│${setv} ${prefix}rate (reply pesan)
-│${setv} ${prefix}jodohku
-│${setv} ${prefix}jadian
-│${setv} ${prefix}fitnah
-│${setv} ${prefix}halah (text)
-│${setv} ${prefix}hilih (text)
-│${setv} ${prefix}huluh (text)
-│${setv} ${prefix}heleh (text)
-│${setv} ${prefix}holoh (text)
-╰──────❍`)
+🎉 *Fun*
+
+${setv} ${prefix}*dadu* - melempar dadu untuk hasil acak.
+${setv} ${prefix}*kerangajaib (text)* - bertanya ke kerang ajaib untuk mendapatkan jawaban acak.
+${setv} ${prefix}*cekmati (nama kamu)* - memeriksa takdir atau "nasib" berdasarkan nama.
+${setv} ${prefix}*ceksifat* - mengetahui sifat atau karakter berdasarkan nama atau teks yang diberikan.
+${setv} ${prefix}*cekkhodam (nama kamu)* - mengetahui khodam atau pelindung spiritual berdasarkan nama.
+${setv} ${prefix}*jodohku* - mengetahui kecocokan atau takdir jodoh secara acak.
+${setv} ${prefix}*jadian* - permainan atau prediksi apakah dua orang akan jadian atau tidak.`)
 			}
 			break
-			case 'ownermenu': {
-				m.reply(`
-╭──❍「 *OWNER* 」❍
-│${setv} ${prefix}bot [set]
-│${setv} ${prefix}setbio
-│${setv} ${prefix}setppbot
-│${setv} ${prefix}join
-│${setv} ${prefix}leave
-│${setv} ${prefix}block
-│${setv} ${prefix}listblock
-│${setv} ${prefix}openblock
-│${setv} ${prefix}listpc
-│${setv} ${prefix}listgc
-│${setv} ${prefix}ban
-│${setv} ${prefix}unban
-│${setv} ${prefix}mute
-│${setv} ${prefix}unmute
-│${setv} ${prefix}creategc
-│${setv} ${prefix}clearchat
-│${setv} ${prefix}addprem
-│${setv} ${prefix}delprem
-│${setv} ${prefix}listprem
-│${setv} ${prefix}addlimit
-│${setv} ${prefix}adduang
-│${setv} ${prefix}setbotauthor
-│${setv} ${prefix}setbotname
-│${setv} ${prefix}setbotpackname
-│${setv} ${prefix}addowner
-│${setv} ${prefix}delowner
-│${setv} ${prefix}getmsgstore
-│${setv} ${prefix}bot --settings
-│${setv} ${prefix}bot settings
-│${setv} ${prefix}getsession
-│${setv} ${prefix}delsession
-│${setv} ${prefix}delsampah
-│${setv} ${prefix}upsw
-│${setv} ${prefix}backup
-│${setv} $
-│${setv} >
-│${setv} <
-╰──────❍`)
-			}
-			break
+
 
 			default:
 			if (budy.startsWith('>')) {
