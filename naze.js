@@ -3,7 +3,8 @@ process.on('uncaughtException', console.error)
 process.on('unhandledRejection', console.error)
 
 /*
-	* Create By Naze
+	* Create By Nazenaze
+ 
 	* Follow https://github.com/nazedev
 	* Whatsapp : https://whatsapp.com/channel/0029VaWOkNm7DAWtkvkJBK43
 */
@@ -1795,7 +1796,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 			  
 				if (!(key in groupNotes)) return m.reply(`❌ Note *${key}* tidak ditemukan.`);
 			  
-				await farid.relayMessage(m.chat, groupNotes[key], {});
+				await naze.relayMessage(m.chat, groupNotes[key], {});
 			  }
 			  break;
 			  
@@ -2593,7 +2594,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 						{ buttonId: `${prefix}ytmp3 ${hasil.url}`, buttonText: { displayText: '🎵 Audio' }, type: 1 },
 						{ buttonId: `${prefix}ytmp4 ${hasil.url}`, buttonText: { displayText: '🎥 Video' }, type: 1 }
 					];
-					await farid.sendButtonMsg(m.chat, {
+					await naze.sendButtonMsg(m.chat, {
 						image: { url: hasil.thumbnail },
 						caption: teksnya,
 						footer: 'Pilih format download:',
@@ -2609,7 +2610,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 							{ buttonId: `${prefix}ytmp3 ${hasil.url}`, buttonText: { displayText: '🎵 Audio' }, type: 1 },
 							{ buttonId: `${prefix}ytmp4 ${hasil.url}`, buttonText: { displayText: '🎥 Video' }, type: 1 }
 						];
-						await farid.sendButtonMsg(m.chat, {
+						await naze.sendButtonMsg(m.chat, {
 							image: { url: hasil.thumbnail },
 							caption: teksnya,
 							footer: 'Pilih format download:',
@@ -2624,7 +2625,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 								{ buttonId: `${prefix}ytmp3 https://youtu.be/${hasil.id}`, buttonText: { displayText: '🎵 Audio' }, type: 1 },
 								{ buttonId: `${prefix}ytmp4 https://youtu.be/${hasil.id}`, buttonText: { displayText: '🎥 Video' }, type: 1 }
 							];
-							await farid.sendButtonMsg(m.chat, {
+							await naze.sendButtonMsg(m.chat, {
 								image: { url: hasil.thumbMedium },
 								caption: teksnya,
 								footer: 'Pilih format download:',
@@ -3001,14 +3002,14 @@ module.exports = naze = async (naze, m, msg, store) => {
 					const caption = `*📍Title:* ${hasil.title}\n*⏳Duration:* ${hasil.duration}\n*🎃Author:* ${hasil.author.nickname} (@${hasil.author.fullname})`;
 			
 					if (command === 'ttmp4') {
-						await farid.sendMessage(m.chat, {
+						await naze.sendMessage(m.chat, {
 							document: { url: videoUrl },
 							fileName: `${hasil.title}.mp4`,
 							mimetype: 'video/mp4',
 							caption
 						}, { quoted: m });
 					} else {
-						await farid.sendMessage(m.chat, {
+						await naze.sendMessage(m.chat, {
 							video: { url: videoUrl },
 							caption
 						}, { quoted: m });
@@ -3056,7 +3057,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 					try {
 						const hasil = await tiktokDl(text);
 						m.reply(mess.wait);
-						await farid.sendMessage(m.chat, {
+						await naze.sendMessage(m.chat, {
 							audio: { url: hasil.music_info.url },
 							mimetype: 'audio/mpeg',
 							ptt: false,
