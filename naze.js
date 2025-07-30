@@ -4200,7 +4200,7 @@ ${setv} ${prefix}*ping* - mengecek respon atau kecepatan bot (latency).`)
 			}
 			break
 			case 'groupmenu': {
-				m.reply(`
+				const replyText = `
 *👥 Grup*
 
 ${setv} ${prefix}*add (62xxx)* - menambahkan anggota ke grup.
@@ -4217,8 +4217,13 @@ ${setv} ${prefix}*tagall* - menandai semua anggota grup.
 ${setv} ${prefix}*hidetag* - mengirim pesan mention tersembunyi ke semua anggota.
 ${setv} ${prefix}*totag (reply pesan)* - mengubah pesan yang dibalas menjadi mention untuk semua anggota.
 ${setv} ${prefix}*listonline* - menampilkan siapa saja yang sedang online.
-${setv} ${prefix}*group set* - mengatur siapa saja yang bisa mengirim pesan di grup.
-`)
+`
+
+			try {
+				await naze.sendMessage(m.chat, { text: replyText }, { quoted: m });
+			} catch (err) {
+				console.error('Gagal mengirim pesan:', err.message);
+			}
 			}
 			break
 			case 'downloadermenu': {
