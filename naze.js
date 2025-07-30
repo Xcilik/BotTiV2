@@ -1508,7 +1508,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 				}
 			}
 			break
-			case 'tagall' case 'all': {
+			case 'tagall': case 'all': {
 				if (!m.isGroup) return m.reply(mess.group)
 				if (!m.isAdmin) return m.reply(mess.admin)
 				if (!m.isBotAdmin) return m.reply(mess.botAdmin)
@@ -1720,7 +1720,7 @@ module.exports = naze = async (naze, m, msg, store) => {
 				m.reply(`@${m.sender.split('@')[0]} Telah Afk${text ? ': ' + text : ''}`)
 			}
 			break
-			case 'readviewonce': case 'readviewone': case 'rvo' case 'ea': {
+			case 'readviewonce': case 'readviewone': case 'rvo': case 'ea': {
 				if (!m.quoted) return m.reply(`Reply view once message\nExample: ${prefix + command}`)
 				try {
 					if (m.quoted.msg.viewOnce) {
