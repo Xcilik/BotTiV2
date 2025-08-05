@@ -4366,6 +4366,7 @@ ${setv} ${prefix}*jadian* - permainan atau prediksi apakah dua orang akan jadian
 		}
 	} catch (e) {
 		console.log(e);
+		if (e?.message?.includes('No sessions')) return;
 		const errorKey = e?.code || e?.name || e?.message?.slice(0, 100) || 'unknown_error';
 		const now = Date.now();
 		if (!errorCache[errorKey]) errorCache[errorKey] = [];
@@ -4376,7 +4377,6 @@ ${setv} ${prefix}*jadian* - permainan atau prediksi apakah dua orang akan jadian
 		return naze.sendFromOwner(ownerNumber, `Halo sayang, sepertinya ada yang error nih, jangan lupa diperbaiki ya\n\nVersion : *${require('./package.json').version}*\n\n*Log error:*\n\n` + util.format(e), m, { contextInfo: { isForwarded: true }})
 	}
 }
-
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
 	fs.unwatchFile(file)
@@ -4384,3 +4384,4 @@ fs.watchFile(file, () => {
 	delete require.cache[file]
 	require(file)
 });
+
